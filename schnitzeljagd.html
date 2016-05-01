@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>Schnitzeljagd Kindergeburtstag </title>
+    <meta name="author" content="Sita Geßner">
+    <style>
+       .frage      { width:80%; border:15px groove #73AD21; padding: 15px; background-color: white; }
+       .hide       { display: none; }
+       .correct    { background-color: #73AD21; border-color: #38610B; }
+       .wrong      { background-color: #FE2E2E; border-color: #8A0808; }
+       body        { background-color: grey; font-family: sans-serif; }
+       button      { width: 100px; height: 50px; font-size: 120%; }
+       h2          { font-size: 200%; }
+       input       { width: 400px; height: 50px; font-size: 120%; margin-right: 10px; }
+       p           { font-size: 150%; }
+    </style>
+    <script language="javascript" type="text/javascript">
+    
+        // Antworten bitte eintragen
+        var answers = new Array ( "22", "gelb", "5", "rot", "5" );
+        
+        // Fragen bitte eintragen
+        var questions = new Array (
+          "Wieviel ist 2 x 11?",
+          "Welche Farbe haben die Blütenblätter von Glockenblumen?",
+          "Wieviele Bäume stehen im Garten?",
+          "Welche Farbe hat Bastis Auto?",
+          "Wieviele Gullideckel befinden sich auf der Straße?"
+        );
+        
+        // Aufgaben bitte eintragen
+        var tasks = new Array (
+          "Berechnet",
+          "Geht zum Blumenbeet",
+          "Geht in den Garten",
+          "Geht zu Bastis Parkplatz",
+          "Verlasst den Garten und geht auf die Straße"
+        );
+        
+        // Abschlussmeldung bitte eintragen
+        var finished = "Toll ihr habt alle Fragen richtig beantwortet! Der Schatz befindet sich in der Gartenlaube!";
+        
+        var countQuestions = answers.length;
+        
+        window.onload = function() {
+          loadQuestions(); 
+        }
+        
+        function loadQuestions() {
+          var body = document.getElementsByTagName('body')[0];
+          if (countQuestions >= 1 ) {
+            body.appendChild(createQuestionHtml(0, false));
+            document.getElementById("answer1").focus();
+          }
+          for (var i = 1; i < countQuestions; i++) {
+             body.appendChild(createQuestionHtml(i, true));
+          }
+        }
+
+        function createQuestionHtml(counter, hide) {
+        var labelCounter = counter + 1;
+        var btnEvent = "checkAnswer(" + labelCounter + ");";
+        var htmlStr = "<div id='frage" + labelCounter + "' class='frage" + (hide ? " hide" : "") +  "'>" +
+             "<h2>Aufgabe " + labelCounter + ":</h2>" +
+             "<p>" + tasks[counter] + "</p>" +
+             "<h2>Frage " + labelCounter + ":</h2>" +
+             "<p>" + questions[counter] + "</p>" +
+             "<p>" + 
+             "Antwort: " + 
+             "<input type='text' id='answer" + labelCounter + "' onkeydown='onPressEnterCheckAnswer(event, " + labelCounter + ")' />" +
+             "<button id='btn" + labelCounter + "' type='button' onclick='" + btnEvent + "'>OK</button>" +
+             "</p>" +
+             "</div><br>";
+          var frag = document.createDocumentFragment();
+          var temp = document.createElement("div");
+          temp.innerHTML = htmlStr;
+          while (temp.firstChild) {
+            frag.appendChild(temp.firstChild);
+          }
+          return frag;
+        }
+        
+        function onPressEnterCheckAnswer(event, id) {
+           if (event.keyCode == 13) {
+             checkAnswer(id);
+           }
+        }
+    
+        function checkAnswer(id) {
+          var answerField = document.getElementById("answer" + id);
+          var answer = (answerField.value).toLowerCase();
+          var correctAnswer = (answers[id - 1]).toLowerCase();
+
+          if (answer == correctAnswer) {
+            markAsCorrect(answerField);
+            showNextQuestion(id);
+          } else {
+            markAsWrong(answerField);
+          }
+        }
+        
+        function markAsCorrect(answerField) {
+           answerField.className = "correct";
+           answerField.readOnly = true;
+        }
+        
+        function markAsWrong(answerField) {
+           answerField.className = "wrong";
+        }
+        
+        function showNextQuestion(id) {
+           if (id < countQuestions) {
+              var nextQuestion = document.getElementById("frage" + (id + 1));
+              nextQuestion.className = "frage";
+              document.getElementById("answer" + (id + 1)).focus();
+            } else {
+              alert(finished);
+            }
+        }
+        
+    </script>  
+  </head>
+  <body></body>
+</html>
